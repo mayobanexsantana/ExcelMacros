@@ -24,4 +24,27 @@
   <em>
     <p>The VBA code is for a Macro that is capable of creating a kml file to draw Telecom cells. This is very useful for telecom Radio Access engineers.</p>
     <p>The Macro is expecting to have a sheet named "plot" where the data for cells are loaded as shown in table below.</p>
+    <p>Color cloumn is expecting hex values of color codes.</p>
   </em> 
+  <table>
+    <tr>
+    <th>Cell</th>
+    <th>Latitud</th>
+    <th>Longitud</th>
+    <th>Height</th>
+    <th>Azimuth</th>
+    <th>Cell Radius</th>
+    <th>"County"</th>
+    <th>Color</th>
+    <th>"Antenna"</th>
+    <th>"Band"</th>
+    <th>"EARFCN"</th>
+    <th>"TAC"</th>
+    <th>"eTilt"</th>
+    <th>"PCI"</th>
+    <th>"BW"</th>
+    <th>"Power"</th>
+    <th>"Radio"</th>
+    <th>"MIMO"</th>
+  </tr>
+  </table>
