@@ -1,0 +1,6 @@
+Function dBm2Watts(J)
+
+M = 10 ^ (J / 10) / 1000
+dBm2Watts = M
+      
+End Function
