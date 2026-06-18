@@ -11,9 +11,8 @@ Dim Lon2
 Numfich = FreeFile
 Sheets("plot").Select
 Open ThisWorkbook.Path & "\" & Cells(1, 4) & ".kml" For Output As #Numfich
-Sheets("kmlhead").Select
-Print #Numfich, "" & Cells(1, 1) & ""
-Print #Numfich, "" & Cells(2, 1) & ""
+Print #Numfich, "<?xml version="1.0" encoding="UTF-8"?>"
+Print #Numfich, "<kml xmlns="http://www.opengis.net/kml/2.2">"
 Print #Numfich, "<Document>"
 Sheets("plot").Select
 
