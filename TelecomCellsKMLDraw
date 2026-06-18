@@ -1,0 +1,155 @@
+Sub PlotSites()
+
+Dim Lat1
+Dim Lon1
+Dim Dist
+Dim AngDeg
+Dim AngRad
+Dim Lat2
+Dim Lon2
+
+Numfich = FreeFile
+Sheets("plot").Select
+Open ThisWorkbook.Path & "\" & Cells(1, 4) & ".kml" For Output As #Numfich
+Sheets("kmlhead").Select
+Print #Numfich, "" & Cells(1, 1) & ""
+Print #Numfich, "" & Cells(2, 1) & ""
+Print #Numfich, "<Document>"
+Sheets("plot").Select
+
+k = 4
+SiteBefore = "dummy"
+Do While Cells(k, 1).Value <> ""
+    
+    'First the Placemark name
+    Lat1 = Cells(k, 2).Value
+    Lon1 = Cells(k, 3).Value
+    Dist = Cells(k, 6).Value
+    AngDeg = Cells(k, 5).Value
+    Set WF = Excel.WorksheetFunction
+    AngRad = AngDeg * WF.Pi / 180
+    Lat2 = ((WF.Asin((Sin(Lat1 * WF.Pi / 180) * Cos(Dist / 6371000)) + (Cos(Lat1 * WF.Pi / 180) * Sin(Dist / 6371000) * Cos(AngRad)))) * 180) / WF.Pi
+    Lon2 = Lon1 + ((WF.Atan2(Cos(Dist / 6371000) - Sin(Lat1 * WF.Pi / 180) * Sin(Lat2 * WF.Pi / 180), Sin(AngRad) * Sin(Dist / 6371000) * Cos(Lat1 * WF.Pi / 180))) * 180 / WF.Pi)
+    
+    Site = Cells(k, 1)
+    Site = Left(Site, 5)
+    If Site <> SiteBefore Then
+        Print #Numfich, "<Placemark>"
+        Print #Numfich, "   <name>" & Site & "</name>"
+        Print #Numfich, "   <Style>"
+        Print #Numfich, "       <Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>"
+        Print #Numfich, "       <IconStyle>"
+        Print #Numfich, "           <color>00ffffff</color>"
+        Print #Numfich, "           <scale>1.2</scale>"
+        Print #Numfich, "       </IconStyle>"
+        Print #Numfich, "   </Style>"
+        Print #Numfich, "   <Point>"
+        Print #Numfich, "       <coordinates>" & Lon1 & "," & Lat1 & "," & Site & "</coordinates>"
+        Print #Numfich, "   </Point>"
+        Print #Numfich, "</Placemark>"
+    End If
+    
+    'Now we create the polygon
+    Print #Numfich, "<Placemark>"
+    Print #Numfich, "   <name>" & Cells(k, 1) & "</name>"
+    Print #Numfich, "   <ExtendedData>"
+    Print #Numfich, "       <Data name=" & Cells(3, 7).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 7) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 9).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 9) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 10).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 10) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 11).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 11) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 12).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 12) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 13).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 13) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 14).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 14) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 15).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 15) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 16).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 16) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "       <Data name=" & Cells(3, 17).Value & ">"
+    Print #Numfich, "           <value>" & Cells(k, 17) & "</value>"
+    Print #Numfich, "       </Data>"
+    Print #Numfich, "   </ExtendedData>"
+    Print #Numfich, "   <LabelStyle>"
+    Print #Numfich, "       <scale>1.1</scale>"
+    Print #Numfich, "   </LabelStyle>"
+    Print #Numfich, "   <Style>"
+    Print #Numfich, "       <PolyStyle>"
+    Print #Numfich, "           <color>" & Cells(k, 8) & "</color> "
+    Print #Numfich, "           <fill>1</fill> "
+    Print #Numfich, "           <outline>1</outline> "
+    Print #Numfich, "       </PolyStyle>"
+    Print #Numfich, "   </Style>"
+    Print #Numfich, "   <Polygon>"
+    Print #Numfich, "       <extrude>1</extrude>"
+    Print #Numfich, "       <altitudeMode>relativeToGround</altitudeMode>"
+    Print #Numfich, "       <outerBoundaryIs>"
+    Print #Numfich, "           <LinearRing>"
+    Print #Numfich, "               <coordinates>"
+    'Cell polygon initiation
+    Lat1 = Cells(k, 2).Value
+    Lon1 = Cells(k, 3).Value
+    Dist = Cells(k, 6).Value
+    'DistBack is used to paint the cell every 50 meters without mixing neighbor cells
+    DistBack = 0
+    AngDeg = Cells(k, 5).Value
+    Set WF = Excel.WorksheetFunction
+    AngRad = AngDeg * WF.Pi / 180
+'    Print #Numfich, "               " & Lon1 & "," & Lat1 & "," & Cells(k, 4) & ""
+    'Polygon opint front side
+    i = 4
+    AngDeg = AngDeg - 32.5
+    Do While i < 15
+        If AngDeg < 0 Then AngDeg = AngDeg + 360
+        If AngDeg > 360 Then AngDeg = AngDeg - 360
+        AngRad = AngDeg * WF.Pi / 180
+        Lat2 = ((WF.Asin((Sin(Lat1 * WF.Pi / 180) * Cos(Dist / 6371000)) + (Cos(Lat1 * WF.Pi / 180) * Sin(Dist / 6371000) * Cos(AngRad)))) * 180) / WF.Pi
+        Lon2 = Lon1 + ((WF.Atan2(Cos(Dist / 6371000) - Sin(Lat1 * WF.Pi / 180) * Sin(Lat2 * WF.Pi / 180), Sin(AngRad) * Sin(Dist / 6371000) * Cos(Lat1 * WF.Pi / 180))) * 180 / WF.Pi)
+        Print #Numfich, "               " & Lon2 & "," & Lat2 & "," & Cells(k, 4) & ""
+        i = i + 1
+        AngDeg = AngDeg + 5.416666667
+    Loop
+    'Polygon point back part
+    AngDeg = Cells(k, 5).Value
+    i = 4
+    AngDeg = AngDeg + 27.08333334 - 5.416666667
+    Do While i < 15
+        If AngDeg < 0 Then AngDeg = AngDeg + 360
+        If AngDeg > 360 Then AngDeg = AngDeg - 360
+        AngRad = AngDeg * WF.Pi / 180
+        Lat2 = ((WF.Asin((Sin(Lat1 * WF.Pi / 180) * Cos(DistBack / 6371000)) + (Cos(Lat1 * WF.Pi / 180) * Sin(DistBack / 6371000) * Cos(AngRad)))) * 180) / WF.Pi
+        Lon2 = Lon1 + ((WF.Atan2(Cos(DistBack / 6371000) - Sin(Lat1 * WF.Pi / 180) * Sin(Lat2 * WF.Pi / 180), Sin(AngRad) * Sin(DistBack / 6371000) * Cos(Lat1 * WF.Pi / 180))) * 180 / WF.Pi)
+        Print #Numfich, "               " & Lon2 & "," & Lat2 & "," & Cells(k, 4) & ""
+        i = i + 1
+        AngDeg = AngDeg - 5.416666667
+    Loop
+    'Final poligom cell paint
+    Print #Numfich, "               </coordinates>"
+    Print #Numfich, "           </LinearRing>"
+    Print #Numfich, "       </outerBoundaryIs>"
+    Print #Numfich, "   </Polygon>"
+    Print #Numfich, "</Placemark>"
+    SiteBefore = Site
+    k = k + 1
+Loop
+Print #Numfich, "</Document>"
+Print #Numfich, "</kml>"
+
+Close #Numfich
+End Sub
+
+
